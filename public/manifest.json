@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "ChatGPT Pro Tool",
+    "version": "1.0.0",
+    "description": "Enhanced ChatGPT experience with custom prompts and scroll controls.",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "background": {
+        "service_worker": "assets/background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://chatgpt.com/*",
+                "https://chat.openai.com/*"
+            ],
+            "js": [
+                "assets/content.js"
+            ]
+        }
+    ],
+    "icons": {
+        "16": "vite.svg",
+        "48": "vite.svg",
+        "128": "vite.svg"
+    }
+}
