@@ -9,7 +9,12 @@
         "scripting"
     ],
     "action": {
-        "default_popup": "index.html"
+        "default_popup": "index.html",
+        "default_icon": {
+            "16": "icon-16.png",
+            "48": "icon-48.png",
+            "128": "icon-128.png"
+        }
     },
     "background": {
         "service_worker": "assets/background.js",
@@ -27,8 +32,8 @@
         }
     ],
     "icons": {
-        "16": "vite.svg",
-        "48": "vite.svg",
-        "128": "vite.svg"
+        "16": "icon-16.png",
+        "48": "icon-48.png",
+        "128": "icon-128.png"
     }
 }
