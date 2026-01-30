@@ -1,6 +1,6 @@
 // Site detection and configuration for multi-platform support
 
-export type SiteType = 'chatgpt' | 'claude' | 'unknown';
+export type SiteType = 'chatgpt' | 'claude' | 'gemini' | 'unknown';
 
 export interface SiteConfig {
     name: string;
@@ -31,6 +31,15 @@ const siteConfigs: Record<SiteType, SiteConfig> = {
         assistantMessageSelector: '[data-testid="assistant-message"], .font-claude-message',
         scrollContainerSelector: '[class*="overflow-y-auto"]',
     },
+    gemini: {
+        name: 'Gemini',
+        inputSelector: '.ql-editor[contenteditable="true"]',
+        inputFallbackSelector: 'div[contenteditable="true"]',
+        messageContainerSelector: 'main',
+        userMessageSelector: '[data-query-source="user"]',
+        assistantMessageSelector: '.model-response-text',
+        scrollContainerSelector: 'main',
+    },
     unknown: {
         name: 'Unknown',
         inputSelector: 'textarea',
@@ -50,6 +59,9 @@ export const detectSite = (): SiteType => {
     }
     if (hostname.includes('claude.ai')) {
         return 'claude';
+    }
+    if (hostname.includes('gemini.google.com')) {
+        return 'gemini';
     }
     return 'unknown';
 };

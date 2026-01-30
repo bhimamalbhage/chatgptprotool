@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "ChatGPT Pro Tool",
+    "name": "ChatGPT Pro Tool (+ Claude & Gemini)",
     "version": "1.0.0",
-    "description": "Enhanced ChatGPT experience with custom prompts and scroll controls.",
+    "description": "Enhanced AI chat experience for ChatGPT, Claude, and Gemini with custom prompts, export options, and scroll controls.",
     "permissions": [
         "storage"
     ],
@@ -23,7 +23,8 @@
             "matches": [
                 "https://chatgpt.com/*",
                 "https://chat.openai.com/*",
-                "https://claude.ai/*"
+                "https://claude.ai/*",
+                "https://gemini.google.com/*"
             ],
             "js": [
                 "assets/content.js"
@@ -38,7 +39,7 @@
     "web_accessible_resources": [
         {
             "resources": ["icon-48.png"],
-            "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*", "https://claude.ai/*"]
+            "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*", "https://claude.ai/*", "https://gemini.google.com/*"]
         }
     ]
 }
