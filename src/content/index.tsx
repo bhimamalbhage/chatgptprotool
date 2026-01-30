@@ -1,10 +1,11 @@
-console.log("ChatGPT Pro Tool Content Script Loaded");
+console.log("AI Chat Pro Tool Content Script Loaded");
 // @ts-ignore
 import styles from '../index.css?inline';
 console.log('Styles loaded length:', styles?.length);
 
 import { createRoot } from 'react-dom/client';
 import { FloatingMenu } from '../features/menu/FloatingMenu';
+import { getSiteConfig } from '../shared/siteConfig';
 
 // Mount Floating Menu
 const hostDiv = document.createElement('div');
@@ -37,8 +38,9 @@ chrome.runtime.onMessage.addListener((message: any, _sender: chrome.runtime.Mess
 });
 
 function insertText(text: string) {
-    const inputElement = document.querySelector('#prompt-textarea');
-    const contentEditable = document.querySelector('div[contenteditable="true"]');
+    const siteConfig = getSiteConfig();
+    const inputElement = document.querySelector(siteConfig.inputSelector);
+    const contentEditable = document.querySelector(siteConfig.inputFallbackSelector);
     const target = (inputElement || contentEditable) as HTMLElement;
 
     if (target) {
@@ -61,6 +63,6 @@ function insertText(text: string) {
         }
     } else {
         console.warn("Could not find prompt input field");
-        alert("Could not find the chat input field. Please click inside the input field first.");
+        alert(`Could not find the chat input field. Please click inside the ${siteConfig.name} input field first.`);
     }
 }

@@ -338,6 +338,217 @@ header, [class*="header"] {
 svg:not([class*="chatgpt-pro"]) {
     color: inherit !important;
 }
+
+/* === LOGOS AND AVATARS === */
+
+/* ChatGPT logo in header/sidebar */
+[class*="logo"], [class*="brand"], [aria-label*="ChatGPT"] {
+    color: ${colors.text} !important;
+}
+
+/* OpenAI logo SVG */
+svg[class*="openai"], svg[aria-label*="OpenAI"], svg[aria-label*="ChatGPT"] {
+    fill: ${colors.text} !important;
+    color: ${colors.text} !important;
+}
+
+/* User avatar container */
+[class*="avatar"], [class*="user-avatar"], [class*="profile"] {
+    border-color: ${colors.border} !important;
+}
+
+/* User initials avatar (like "BM") */
+[class*="avatar"] span, [class*="avatar"] div {
+    color: ${colors.text} !important;
+}
+
+/* Sidebar user info section */
+[class*="account"], [class*="user-menu"], [data-testid*="profile"] {
+    background-color: ${colors.bg} !important;
+    color: ${colors.text} !important;
+}
+
+/* Navigation icons in sidebar */
+nav svg, [class*="sidebar"] svg {
+    color: ${colors.textSecondary} !important;
+}
+
+nav button:hover svg, [class*="sidebar"] button:hover svg {
+    color: ${colors.text} !important;
+}
+
+/* GPTs icons/avatars */
+[class*="gizmo"], [class*="gpt-icon"] {
+    border-color: ${colors.border} !important;
+}
+
+/* Badge/pill elements */
+[class*="badge"], [class*="pill"], [class*="tag"] {
+    background-color: ${colors.hover} !important;
+    color: ${colors.text} !important;
+    border-color: ${colors.border} !important;
+}
+
+/* Free offer banner */
+[class*="banner"], [class*="offer"], [class*="promo"] {
+    background-color: ${colors.bgSecondary} !important;
+    border-color: ${colors.border} !important;
+}
+
+/* Model selector dropdown */
+[class*="model-selector"], [class*="model-switcher"], [data-testid*="model"] {
+    background-color: ${colors.bgSecondary} !important;
+    color: ${colors.text} !important;
+}
+
+/* Share button and other header buttons */
+header button, [class*="header"] button {
+    color: ${colors.textSecondary} !important;
+}
+
+header button:hover, [class*="header"] button:hover {
+    color: ${colors.text} !important;
+    background-color: ${colors.hover} !important;
+}
+
+/* "New chat" button styling */
+[class*="new-chat"], [data-testid*="new-chat"] {
+    color: ${colors.text} !important;
+}
+
+/* Chat list items */
+[class*="conversation-list"] a, [class*="chat-list"] a, nav a {
+    color: ${colors.text} !important;
+}
+
+[class*="conversation-list"] a:hover, [class*="chat-list"] a:hover, nav a:hover {
+    background-color: ${colors.hover} !important;
+}
+
+/* Active/selected chat */
+[class*="conversation-list"] [class*="active"],
+[class*="conversation-list"] [class*="selected"],
+nav [class*="bg-token-sidebar-surface-secondary"] {
+    background-color: ${colors.hover} !important;
+}
+
+/* Sidebar section headers (GPTs, Your chats, etc.) */
+[class*="sidebar"] h3, [class*="sidebar"] h4, nav h3, nav h4 {
+    color: ${colors.textSecondary} !important;
+}
+
+/* Tooltip styling */
+[role="tooltip"], [class*="tooltip"] {
+    background-color: ${colors.bgSecondary} !important;
+    color: ${colors.text} !important;
+    border-color: ${colors.border} !important;
+}
+
+/* Modal/Dialog backgrounds */
+[role="dialog"], [class*="modal"] {
+    background-color: ${colors.bgSecondary} !important;
+    border-color: ${colors.border} !important;
+}
+
+/* Token-based surface colors (ChatGPT specific) */
+[class*="bg-token-sidebar"] {
+    background-color: ${colors.bg} !important;
+}
+
+[class*="bg-token-main"] {
+    background-color: ${colors.bg} !important;
+}
+
+/* Ensure all text inherits properly */
+[class*="text-token"] {
+    color: ${colors.text} !important;
+}
+
+/* === PROMOTIONAL BANNERS === */
+
+/* "Try Plus free" banner - ultra specific selectors */
+aside.flex.w-full,
+aside[class*="rounded-3xl"],
+aside[class*="rounded-t-"],
+aside[class*="bg-token"] {
+    background-color: ${colors.bgSecondary} !important;
+    border-color: ${colors.border} !important;
+}
+
+/* Target by attribute contains for Tailwind ! modifier classes */
+[class*="bg-token-bg-tertiary"] {
+    background-color: ${colors.bgSecondary} !important;
+}
+
+/* Force all aside backgrounds */
+aside, aside > div, aside div {
+    background-color: ${colors.bgSecondary} !important;
+}
+
+aside, aside * {
+    border-color: ${colors.border} !important;
+}
+
+/* Banner text */
+aside span, aside div, aside p {
+    color: ${colors.text} !important;
+}
+
+aside .text-token-text-secondary,
+aside [class*="text-sm"] {
+    color: ${colors.textSecondary} !important;
+}
+
+/* The specific promo banner structure */
+[class*="bottom-full"] > div,
+[class*="bottom-full"] > div > div,
+[class*="bottom-full"] aside {
+    background-color: ${colors.bgSecondary} !important;
+}
+
+/* "Try Plus free" / upgrade buttons in banner */
+aside button,
+aside .btn,
+aside [class*="btn-"] {
+    background-color: ${colors.hover} !important;
+    border-color: ${colors.border} !important;
+    color: ${colors.accent} !important;
+}
+
+aside button:hover {
+    background-color: ${colors.border} !important;
+}
+
+/* Close button */
+aside [data-testid="close-button"],
+aside button[aria-label="Close"] {
+    background-color: transparent !important;
+    color: ${colors.textSecondary} !important;
+}
+
+aside [data-testid="close-button"]:hover,
+aside button[aria-label="Close"]:hover {
+    background-color: ${colors.hover} !important;
+    color: ${colors.text} !important;
+}
+
+/* Token surface classes */
+[class*="bg-token-surface"],
+[class*="hover:bg-token-surface"]:hover {
+    background-color: ${colors.hover} !important;
+}
+
+/* All token border colors */
+[class*="border-token-border"] {
+    border-color: ${colors.border} !important;
+}
+
+/* Force override any inline dark: classes */
+.dark [class*="dark\\:bg-"],
+[class*="dark:bg-token"],
+[class*="dark:bg-\\["] {
+    background-color: ${colors.bgSecondary} !important;
+}
 `.trim();
 };
 

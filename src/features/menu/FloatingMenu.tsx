@@ -2,24 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { exportAsPDF, exportAsDocx } from '../export/exportChat';
 import { getPrompts, savePrompt, deletePrompt } from '../prompts/storage';
 import type { Prompt } from '../prompts/types';
-import { useTheme } from '../themes/useTheme';
-import { ThemeSelector } from '../themes/components/ThemeSelector';
+import { getSiteConfig } from '../../shared/siteConfig';
+// TODO: Themes feature - uncomment when ready
+// import { useTheme } from '../themes/useTheme';
+// import { ThemeSelector } from '../themes/components/ThemeSelector';
 
-type View = 'menu' | 'prompts' | 'newPrompt' | 'themes';
+type View = 'menu' | 'prompts' | 'newPrompt'; // | 'themes' - TODO: uncomment when ready
 
 interface FloatingMenuProps {
     shadowRoot?: ShadowRoot;
 }
 
-export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
+export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot: _shadowRoot }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [view, setView] = useState<View>('menu');
     const [prompts, setPrompts] = useState<Prompt[]>([]);
     const [newPromptTitle, setNewPromptTitle] = useState('');
     const [newPromptContent, setNewPromptContent] = useState('');
 
-    // Theme hook
-    const { themeId, themeList, changeTheme } = useTheme({ shadowRoot });
+    // TODO: Themes feature - uncomment when ready
+    // const { themeId, themeList, changeTheme } = useTheme({ shadowRoot });
 
     // Load prompts
     useEffect(() => {
@@ -107,8 +109,9 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
     // Prompt functions
     const insertText = (text: string) => {
         console.log('Insert text:', text);
-        const inputElement = document.querySelector('#prompt-textarea');
-        const contentEditable = document.querySelector('div[contenteditable="true"]');
+        const siteConfig = getSiteConfig();
+        const inputElement = document.querySelector(siteConfig.inputSelector);
+        const contentEditable = document.querySelector(siteConfig.inputFallbackSelector);
         const target = (inputElement || contentEditable) as HTMLElement;
 
         if (target) {
@@ -182,7 +185,8 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
         { icon: 'pdf', label: 'Export as PDF', action: handleExportPDF },
         { icon: 'doc', label: 'Export as Word', action: handleExportDocx },
         { icon: 'prompts', label: 'Saved Prompts', action: () => setView('prompts') },
-        { icon: 'themes', label: 'Themes', action: () => setView('themes') },
+        // TODO: Themes feature - uncomment when ready
+        // { icon: 'themes', label: 'Themes', action: () => setView('themes') },
     ];
 
     const getIcon = (name: string) => {
@@ -197,15 +201,16 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
                 return <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></>;
             case 'prompts':
                 return <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></>;
-            case 'themes':
-                return <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></>;
+            // TODO: Themes feature - uncomment when ready
+            // case 'themes':
+            //     return <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></>;
             default:
                 return null;
         }
     };
 
     return (
-        <div className="fixed bottom-6 right-6 z-[999999] pointer-events-auto">
+        <div className="fixed bottom-12 right-6 z-[999999] pointer-events-auto">
             {/* Backdrop to close menu */}
             {isOpen && (
                 <div
@@ -333,6 +338,9 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
                                     type="text"
                                     value={newPromptTitle}
                                     onChange={(e) => setNewPromptTitle(e.target.value)}
+                                    onKeyDown={(e) => e.stopPropagation()}
+                                    onKeyUp={(e) => e.stopPropagation()}
+                                    onKeyPress={(e) => e.stopPropagation()}
                                     placeholder="Title"
                                     className="w-full px-3 py-2 bg-theme-hover/50 border border-theme-border rounded-lg text-sm text-theme-text-primary placeholder:text-theme-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-theme-accent/50 focus:border-theme-accent transition-all"
                                     autoFocus
@@ -340,6 +348,9 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
                                 <textarea
                                     value={newPromptContent}
                                     onChange={(e) => setNewPromptContent(e.target.value)}
+                                    onKeyDown={(e) => e.stopPropagation()}
+                                    onKeyUp={(e) => e.stopPropagation()}
+                                    onKeyPress={(e) => e.stopPropagation()}
                                     placeholder="Prompt content..."
                                     className="w-full px-3 py-2 bg-theme-hover/50 border border-theme-border rounded-lg text-sm text-theme-text-primary placeholder:text-theme-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-theme-accent/50 focus:border-theme-accent transition-all resize-none h-24"
                                 />
@@ -366,28 +377,31 @@ export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
                         </div>
                     )}
 
-                    {view === 'themes' && (
+                    {/* TODO: Themes feature - uncomment when ready */}
+                    {/* {view === 'themes' && (
                         <ThemeSelector
                             themes={themeList}
                             currentThemeId={themeId}
                             onSelectTheme={changeTheme}
                             onBack={() => setView('menu')}
                         />
-                    )}
+                    )} */}
                 </div>
             )}
 
             {/* Main FAB Button */}
             <button
                 onClick={handleToggle}
-                className={`w-12 h-12 rounded-full bg-theme-accent text-white shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center ${
+                className={`w-8 h-8 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center overflow-hidden ${
                     isOpen ? 'rotate-45' : ''
                 }`}
                 title="ChatGPT Pro Tools"
             >
-                <svg className="w-6 h-6 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
+                <img
+                    src={chrome.runtime.getURL('icon-48.png')}
+                    alt="ChatGPT Pro Tool"
+                    className="w-full h-full object-cover"
+                />
             </button>
         </div>
     );
