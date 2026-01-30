@@ -2,15 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { exportAsPDF, exportAsDocx } from '../export/exportChat';
 import { getPrompts, savePrompt, deletePrompt } from '../prompts/storage';
 import type { Prompt } from '../prompts/types';
+import { useTheme } from '../themes/useTheme';
+import { ThemeSelector } from '../themes/components/ThemeSelector';
 
-type View = 'menu' | 'prompts' | 'newPrompt';
+type View = 'menu' | 'prompts' | 'newPrompt' | 'themes';
 
-export const FloatingMenu: React.FC = () => {
+interface FloatingMenuProps {
+    shadowRoot?: ShadowRoot;
+}
+
+export const FloatingMenu: React.FC<FloatingMenuProps> = ({ shadowRoot }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [view, setView] = useState<View>('menu');
     const [prompts, setPrompts] = useState<Prompt[]>([]);
     const [newPromptTitle, setNewPromptTitle] = useState('');
     const [newPromptContent, setNewPromptContent] = useState('');
+
+    // Theme hook
+    const { themeId, themeList, changeTheme } = useTheme({ shadowRoot });
 
     // Load prompts
     useEffect(() => {
@@ -173,6 +182,7 @@ export const FloatingMenu: React.FC = () => {
         { icon: 'pdf', label: 'Export as PDF', action: handleExportPDF },
         { icon: 'doc', label: 'Export as Word', action: handleExportDocx },
         { icon: 'prompts', label: 'Saved Prompts', action: () => setView('prompts') },
+        { icon: 'themes', label: 'Themes', action: () => setView('themes') },
     ];
 
     const getIcon = (name: string) => {
@@ -187,6 +197,8 @@ export const FloatingMenu: React.FC = () => {
                 return <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></>;
             case 'prompts':
                 return <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></>;
+            case 'themes':
+                return <><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></>;
             default:
                 return null;
         }
@@ -352,6 +364,15 @@ export const FloatingMenu: React.FC = () => {
                                 </div>
                             </form>
                         </div>
+                    )}
+
+                    {view === 'themes' && (
+                        <ThemeSelector
+                            themes={themeList}
+                            currentThemeId={themeId}
+                            onSelectTheme={changeTheme}
+                            onBack={() => setView('menu')}
+                        />
                     )}
                 </div>
             )}

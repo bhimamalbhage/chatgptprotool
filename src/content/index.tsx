@@ -26,7 +26,7 @@ shadow.appendChild(rootDiv);
 
 rootDiv.className = `w-full h-full pointer-events-none`;
 
-createRoot(rootDiv).render(<FloatingMenu />);
+createRoot(rootDiv).render(<FloatingMenu shadowRoot={shadow} />);
 
 // Listen for messages from the popup (for backward compatibility)
 chrome.runtime.onMessage.addListener((message: any, _sender: chrome.runtime.MessageSender, sendResponse: (response?: any) => void) => {
