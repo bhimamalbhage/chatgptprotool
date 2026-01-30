@@ -16,6 +16,9 @@ export function extractMessages(): ChatMessage[] {
     if (site === 'claude') {
         return extractClaudeMessages();
     }
+    if (site === 'gemini') {
+        return extractGeminiMessages();
+    }
     return extractChatGPTMessages();
 }
 
@@ -58,6 +61,78 @@ function extractClaudeMessages(): ChatMessage[] {
             messages.push({ role, content });
         }
     });
+
+    return messages;
+}
+
+/**
+ * Extract messages from Gemini's DOM
+ */
+function extractGeminiMessages(): ChatMessage[] {
+    const messages: ChatMessage[] = [];
+
+    // Gemini uses conversation turns that contain both user query and model response
+    // User messages: Look for elements with user query content
+    // Model responses: Look for model response containers
+
+    // Try to find user messages - Gemini uses various selectors
+    const userMessages = document.querySelectorAll(
+        '[data-query-source="user"], .query-text, .user-query'
+    );
+    const assistantMessages = document.querySelectorAll(
+        '.model-response-text, .response-content, [data-message-author="model"]'
+    );
+
+    // Collect all messages with their positions
+    const allMessages: { element: Element; role: 'user' | 'assistant' }[] = [];
+
+    userMessages.forEach((el) => {
+        allMessages.push({ element: el, role: 'user' });
+    });
+
+    assistantMessages.forEach((el) => {
+        allMessages.push({ element: el, role: 'assistant' });
+    });
+
+    // Sort by document position to maintain conversation order
+    allMessages.sort((a, b) => {
+        const position = a.element.compareDocumentPosition(b.element);
+        if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+        if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+        return 0;
+    });
+
+    // Extract content from each message
+    allMessages.forEach(({ element, role }) => {
+        const content = extractContentFromElement(element as HTMLElement);
+        if (content.trim()) {
+            messages.push({ role, content });
+        }
+    });
+
+    // Fallback: If no messages found, try alternative approach
+    if (messages.length === 0) {
+        // Look for conversation turns
+        const turns = document.querySelectorAll('[class*="conversation-turn"], [class*="turn"]');
+        turns.forEach((turn) => {
+            // Try to identify user vs assistant based on content structure
+            const userPart = turn.querySelector('[class*="user"], [class*="query"]');
+            const assistantPart = turn.querySelector('[class*="model"], [class*="response"]');
+
+            if (userPart) {
+                const content = extractContentFromElement(userPart as HTMLElement);
+                if (content.trim()) {
+                    messages.push({ role: 'user', content });
+                }
+            }
+            if (assistantPart) {
+                const content = extractContentFromElement(assistantPart as HTMLElement);
+                if (content.trim()) {
+                    messages.push({ role: 'assistant', content });
+                }
+            }
+        });
+    }
 
     return messages;
 }
