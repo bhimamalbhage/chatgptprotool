@@ -4,9 +4,7 @@
     "version": "1.0.0",
     "description": "Enhanced ChatGPT experience with custom prompts and scroll controls.",
     "permissions": [
-        "storage",
-        "activeTab",
-        "scripting"
+        "storage"
     ],
     "action": {
         "default_popup": "index.html",
@@ -24,7 +22,8 @@
         {
             "matches": [
                 "https://chatgpt.com/*",
-                "https://chat.openai.com/*"
+                "https://chat.openai.com/*",
+                "https://claude.ai/*"
             ],
             "js": [
                 "assets/content.js"
@@ -35,5 +34,11 @@
         "16": "icon-16.png",
         "48": "icon-48.png",
         "128": "icon-128.png"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["icon-48.png"],
+            "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*", "https://claude.ai/*"]
+        }
+    ]
 }

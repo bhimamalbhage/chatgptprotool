@@ -1,5 +1,6 @@
 import { Document, Packer, Paragraph, TextRun, HeadingLevel, BorderStyle } from 'docx';
 import { saveAs } from 'file-saver';
+import { detectSite, getCurrentSiteName } from '../../shared/siteConfig';
 
 interface ChatMessage {
     role: 'user' | 'assistant';
@@ -7,9 +8,64 @@ interface ChatMessage {
 }
 
 /**
- * Extract chat messages from the ChatGPT DOM
+ * Extract chat messages from the page DOM (supports ChatGPT and Claude)
  */
 export function extractMessages(): ChatMessage[] {
+    const site = detectSite();
+
+    if (site === 'claude') {
+        return extractClaudeMessages();
+    }
+    return extractChatGPTMessages();
+}
+
+/**
+ * Extract messages from Claude's DOM
+ */
+function extractClaudeMessages(): ChatMessage[] {
+    const messages: ChatMessage[] = [];
+
+    // Claude's actual selectors (from inspect):
+    // User messages: [data-testid="user-message"]
+    // Assistant messages: .font-claude-response
+
+    const userMessages = document.querySelectorAll('[data-testid="user-message"]');
+    const assistantMessages = document.querySelectorAll('.font-claude-response');
+
+    // Collect all messages with their positions
+    const allMessages: { element: Element; role: 'user' | 'assistant' }[] = [];
+
+    userMessages.forEach((el) => {
+        allMessages.push({ element: el, role: 'user' });
+    });
+
+    assistantMessages.forEach((el) => {
+        allMessages.push({ element: el, role: 'assistant' });
+    });
+
+    // Sort by document position to maintain conversation order
+    allMessages.sort((a, b) => {
+        const position = a.element.compareDocumentPosition(b.element);
+        if (position & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+        if (position & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+        return 0;
+    });
+
+    // Extract content from each message
+    allMessages.forEach(({ element, role }) => {
+        const content = extractContentFromElement(element as HTMLElement);
+        if (content.trim()) {
+            messages.push({ role, content });
+        }
+    });
+
+    return messages;
+}
+
+/**
+ * Extract messages from ChatGPT's DOM
+ */
+function extractChatGPTMessages(): ChatMessage[] {
     const messages: ChatMessage[] = [];
 
     // Strategy 1: Look for elements with data-message-author-role attribute
@@ -109,9 +165,10 @@ function extractContentFromElement(element: HTMLElement): string {
  */
 export function generatePrintableHTML(messages: ChatMessage[]): string {
     const exportDate = new Date().toLocaleString();
+    const siteName = getCurrentSiteName();
 
     const messageHTML = messages.map((msg) => {
-        const roleLabel = msg.role === 'user' ? 'You' : 'ChatGPT';
+        const roleLabel = msg.role === 'user' ? 'You' : siteName;
         const roleClass = msg.role;
 
         // Convert markdown-style code blocks to HTML
@@ -134,7 +191,7 @@ export function generatePrintableHTML(messages: ChatMessage[]): string {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>ChatGPT Export</title>
+    <title>${siteName} Export</title>
     <style>
         * {
             box-sizing: border-box;
@@ -219,7 +276,7 @@ export function generatePrintableHTML(messages: ChatMessage[]): string {
     </style>
 </head>
 <body>
-    <h1>ChatGPT Conversation</h1>
+    <h1>${siteName} Conversation</h1>
     <p class="export-info">Exported on ${exportDate}</p>
     ${messageHTML}
 </body>
@@ -240,9 +297,10 @@ function escapeHTML(text: string): string {
  */
 export function exportAsPDF(): void {
     const messages = extractMessages();
+    const siteName = getCurrentSiteName();
 
     if (messages.length === 0) {
-        alert('No conversation found to export. Make sure you have an active ChatGPT conversation on the page.');
+        alert(`No conversation found to export. Make sure you have an active ${siteName} conversation on the page.`);
         return;
     }
 
@@ -272,9 +330,10 @@ export function exportAsPDF(): void {
  */
 export async function exportAsDocx(): Promise<void> {
     const messages = extractMessages();
+    const siteName = getCurrentSiteName();
 
     if (messages.length === 0) {
-        alert('No conversation found to export. Make sure you have an active ChatGPT conversation on the page.');
+        alert(`No conversation found to export. Make sure you have an active ${siteName} conversation on the page.`);
         return;
     }
 
@@ -283,7 +342,7 @@ export async function exportAsDocx(): Promise<void> {
     // Build document content
     const children: Paragraph[] = [
         new Paragraph({
-            text: 'ChatGPT Conversation',
+            text: `${siteName} Conversation`,
             heading: HeadingLevel.HEADING_1,
             spacing: { after: 200 },
         }),
@@ -309,7 +368,7 @@ export async function exportAsDocx(): Promise<void> {
 
     // Add each message
     for (const msg of messages) {
-        const roleLabel = msg.role === 'user' ? 'You' : 'ChatGPT';
+        const roleLabel = msg.role === 'user' ? 'You' : siteName;
         const isUser = msg.role === 'user';
 
         // Role label paragraph
@@ -407,6 +466,6 @@ export async function exportAsDocx(): Promise<void> {
 
     // Generate and save the file
     const blob = await Packer.toBlob(doc);
-    const filename = `ChatGPT_Export_${new Date().toISOString().split('T')[0]}.docx`;
+    const filename = `${siteName}_Export_${new Date().toISOString().split('T')[0]}.docx`;
     saveAs(blob, filename);
 }

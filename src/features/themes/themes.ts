@@ -19,6 +19,68 @@ export const themes: Theme[] = [
             hover: '#3a3a3a',
         },
     },
+    // === DARK / NIGHT MODE THEMES ===
+    {
+        id: 'oled-black',
+        name: 'OLED Black',
+        colors: {
+            // True black for OLED screens - maximum battery saving
+            bg: '#000000',
+            bgSecondary: '#0a0a0a',
+            text: '#e4e4e7',
+            textSecondary: '#a1a1aa',
+            accent: '#10a37f',
+            accentText: '#ffffff',
+            border: '#1a1a1a',
+            hover: '#141414',
+        },
+    },
+    {
+        id: 'night-mode',
+        name: 'Night Mode',
+        colors: {
+            // Warm tones, reduced blue light for nighttime use
+            bg: '#1a1512',
+            bgSecondary: '#241f1a',
+            text: '#e8e0d5',
+            textSecondary: '#b8a99a',
+            accent: '#d4a574',
+            accentText: '#1a1512',
+            border: '#3d352c',
+            hover: '#2d2620',
+        },
+    },
+    {
+        id: 'soft-dark',
+        name: 'Soft Dark',
+        colors: {
+            // Softer dark theme, easier on eyes than pure black
+            bg: '#1e1e1e',
+            bgSecondary: '#282828',
+            text: '#d4d4d4',
+            textSecondary: '#9d9d9d',
+            accent: '#4fc3f7',
+            accentText: '#1e1e1e',
+            border: '#3c3c3c',
+            hover: '#333333',
+        },
+    },
+    {
+        id: 'dim',
+        name: 'Dim',
+        colors: {
+            // Lightweight dim theme - not too dark, reduces eye strain
+            bg: '#15202b',
+            bgSecondary: '#192734',
+            text: '#d9d9d9',
+            textSecondary: '#8899a6',
+            accent: '#1d9bf0',
+            accentText: '#ffffff',
+            border: '#38444d',
+            hover: '#22303c',
+        },
+    },
+    // === AESTHETIC THEMES ===
     {
         id: 'midnight',
         name: 'Midnight',

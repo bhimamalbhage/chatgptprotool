@@ -32,8 +32,8 @@ export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
                 <span className="text-sm font-semibold text-theme-text-primary">Themes</span>
             </div>
 
-            {/* Theme Grid */}
-            <div className="p-3 grid grid-cols-2 gap-2">
+            {/* Theme Grid - scrollable for many themes */}
+            <div className="p-3 grid grid-cols-2 gap-2 max-h-[320px] overflow-y-auto">
                 {themes.map((theme) => {
                     const isSelected = theme.id === currentThemeId;
                     return (
