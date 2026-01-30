@@ -12,6 +12,18 @@
     --color-theme-hover: #111827;
 }
 
+/* Default CSS variables for shadow DOM - will be overridden by useTheme hook */
+:host, :root {
+    --color-theme-bg: #050816;
+    --color-theme-bg-secondary: #0b1020;
+    --color-theme-text: #e5e7eb;
+    --color-theme-text-secondary: #9ca3af;
+    --color-theme-accent: #10a37f;
+    --color-theme-accent-text: #ffffff;
+    --color-theme-border: #1f2933;
+    --color-theme-hover: #111827;
+}
+
 /* === Extension Popup Base Styles === */
 html,
 body {
